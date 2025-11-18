@@ -28,11 +28,11 @@ jobs:
     # ----------------------------------------
     - name: ⚙️ Establecer Permisos de Ejecución para deploy.sh
       # La ruta absoluta a deploy.sh desde la raíz del repo.
-      run: chmod +x Parte\ 2\ Integracion/deploy.sh
+      run: chmod +x deploy.sh
     
     - name: 🔍 Verificación de Sintaxis de Shell Script
       # Usa 'bash -n' para comprobar errores de sintaxis sin ejecutar el script
-      run: bash -n Parte\ 2\ Integracion/deploy.sh
+      run: bash -n deploy.sh
 
     # ----------------------------------------
     # VALIDACIÓN DE TERRAFORM
