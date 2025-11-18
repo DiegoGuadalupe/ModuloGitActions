@@ -1,0 +1,72 @@
+name: ⚙️ Verificación Manual (Terraform, Ansible & Shell Script)
+
+# Permite ejecutar este workflow manualmente desde la interfaz de GitHub
+on:
+  workflow_dispatch:
+    inputs:
+      terraform_dir:
+        description: 'Directorio que contiene los archivos .tf (Parte 2 Integracion/Terraform)'
+        required: true
+        default: 'Parte 2 Integracion/Terraform'
+
+jobs:
+  validate-code:
+    runs-on: ubuntu-latest
+    
+    # Define variables de entorno para las credenciales de AWS
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+
+    steps:
+    - name: ⬇️ Checkout del Código
+      uses: actions/checkout@v4
+
+    # ----------------------------------------
+    # VALIDACIÓN DEL SCRIPT DEPLOY.SH
+    # ----------------------------------------
+    - name: ⚙️ Establecer Permisos de Ejecución para deploy.sh
+      # La ruta absoluta a deploy.sh desde la raíz del repo.
+      run: chmod +x Parte\ 2\ Integracion/deploy.sh
+    
+    - name: 🔍 Verificación de Sintaxis de Shell Script
+      # Usa 'bash -n' para comprobar errores de sintaxis sin ejecutar el script
+      run: bash -n Parte\ 2\ Integracion/deploy.sh
+
+    # ----------------------------------------
+    # VALIDACIÓN DE TERRAFORM
+    # ----------------------------------------
+    - name: ⚙️ Configurar Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: 🔄 Inicializar Terraform
+      run: terraform init
+      working-directory: ${{ inputs.terraform_dir }}
+
+    - name: 🔍 Validar Formato y Sintaxis de Terraform
+      run: terraform fmt -check && terraform validate
+      working-directory: ${{ inputs.terraform_dir }}
+
+    - name: 📝 Terraform Plan (Verificación)
+      # Esto verifica que el código es válido y las credenciales de AWS funcionan
+      run: terraform plan -no-color
+      working-directory: ${{ inputs.terraform_dir }}
+
+
+    # ----------------------------------------
+    # VALIDACIÓN DE ANSIBLE
+    # ----------------------------------------
+    - name: ⚙️ Configurar Python y Ansible
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: 🛠️ Instalar Ansible y dependencias
+      run: |
+        pip install ansible
+        ansible-galaxy collection install amazon.aws
+
+    - name: 🔍 Validar Sintaxis de Playbooks de Ansible
+      # La ruta absoluta a Ansible/nginx.yml desde la raíz del repo.
+      run: ansible-playbook -i InventarioVacio.yml --syntax-check Parte\ 2\ Integracion/Ansible/nginx.yml
