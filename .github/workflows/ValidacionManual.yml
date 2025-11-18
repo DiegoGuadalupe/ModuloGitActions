@@ -5,9 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       terraform_dir:
-        description: 'Directorio que contiene los archivos .tf (Parte 2 Integracion/Terraform)'
+        description: 'Directorio que contiene los archivos .tf (Terraform)'
         required: true
-        default: 'Parte 2 Integracion/Terraform'
+        default: 'Terraform'
 
 jobs:
   validate-code:
@@ -68,5 +68,5 @@ jobs:
         ansible-galaxy collection install amazon.aws
 
     - name: 🔍 Validar Sintaxis de Playbooks de Ansible
-      # La ruta absoluta a Ansible/nginx.yml desde la raíz del repo.
-      run: ansible-playbook -i InventarioVacio.yml --syntax-check Parte\ 2\ Integracion/Ansible/nginx.yml
+      # La ruta absoluta a Ansiblenginx.yml desde la raíz del repo.
+      run: ansible-playbook -i InventarioVacio.yml --syntax-check Ansible/nginx.yml
