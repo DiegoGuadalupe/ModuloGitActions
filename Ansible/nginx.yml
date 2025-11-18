@@ -1,0 +1,21 @@
+---
+- name: Instalar y configurar Nginx
+  hosts: role_web
+  become: yes
+
+  tasks:
+    - name: Actualizar la caché de paquetes (apt)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600 # Válido por 1 hora
+
+    - name: Instalar Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Asegurar que Nginx esté corriendo y habilitado al inicio
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: started
+        enabled: yes
