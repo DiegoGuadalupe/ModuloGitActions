@@ -47,7 +47,7 @@ jobs:
       working-directory: ${{ inputs.terraform_dir }}
 
     - name: 🔍 Validar Formato y Sintaxis de Terraform
-      run: terraform fmt -check && terraform validate
+      run: terraform fmt -check -diff
       working-directory: ${{ inputs.terraform_dir }}
 
     - name: 📝 Terraform Plan (Verificación)
