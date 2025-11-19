@@ -2,4 +2,4 @@
 ansible_host: "{{ public_ip_address }}"
 # El usuario y la clave ya están en tu ansible.cfg, pero es bueno ser explícito
 ansible_user: ubuntu
-ansible_ssh_private_key_file: ./DiegoKey.pem
+ansible_ssh_private_key_file: Ansible/DiegoKey.pem
