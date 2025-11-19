@@ -228,10 +228,10 @@ resource "aws_lb_listener" "http_listener" {
 # Launch Template para ASG
 # ========================================
 resource "aws_launch_template" "web_lt" {
-  name_prefix   = "web-lt-"
-  image_id      = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  key_name      = aws_key_pair.diego_key.key_name
+  name_prefix            = "web-lt-"
+  image_id               = data.aws_ami.ubuntu.id
+  instance_type          = "t3.micro"
+  key_name               = aws_key_pair.diego_key.key_name
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   tag_specifications {
     resource_type = "instance"
@@ -246,10 +246,10 @@ resource "aws_launch_template" "web_lt" {
 # AutoScaling Group
 # ========================================
 resource "aws_autoscaling_group" "web_asg" {
-  desired_capacity     = 2
-  min_size             = 2
-  max_size             = 4
-  vpc_zone_identifier  = [aws_subnet.public_1.id, aws_subnet.public_2.id]
+  desired_capacity    = 2
+  min_size            = 2
+  max_size            = 4
+  vpc_zone_identifier = [aws_subnet.public_1.id, aws_subnet.public_2.id]
   launch_template {
     id      = aws_launch_template.web_lt.id
     version = "$Latest"
@@ -258,20 +258,20 @@ resource "aws_autoscaling_group" "web_asg" {
   health_check_type = "EC2"
 
   tag {
-    key = "role"
-    value = "web"
+    key                 = "role"
+    value               = "web"
     propagate_at_launch = true
   }
 }
 
 resource "aws_db_instance" "postgres" {
-  identifier         = "app-db"
-  engine             = "postgres"
-  instance_class     = "db.t3.micro"
-  allocated_storage  = 20
-  username           = "root"
-  password           = "Admin12345"
-  skip_final_snapshot = true
+  identifier             = "app-db"
+  engine                 = "postgres"
+  instance_class         = "db.t3.micro"
+  allocated_storage      = 20
+  username               = "root"
+  password               = "Admin12345"
+  skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_subnets.name
   publicly_accessible    = false
