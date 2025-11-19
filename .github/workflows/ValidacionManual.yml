@@ -39,6 +39,8 @@ jobs:
     # ----------------------------------------
     - name: ⚙️ Configurar Terraform
       uses: hashicorp/setup-terraform@v3
+      with:
+       terraform_version: "1.13.5"
 
     - name: 🔄 Inicializar Terraform
       run: terraform init
